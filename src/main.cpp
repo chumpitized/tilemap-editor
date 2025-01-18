@@ -1,26 +1,37 @@
 #include <raylib.h>
-
 #include <iostream>
-
 
 int screenWidth = 1920;
 int screenHeight = 1080;
 
+struct Vec2 {
+	int x;
+	int y;
+};
+
 int main() {
-	
-	int xOffset = screenWidth / 2;
-	int yOffset = screenHeight / 2;
+	float tileSize		= 64;
 
-	int xRect = 1024;
-	int yRect = 1024;
+	float canvasWidth	= 1024;
+	float canvasHeight 	= 1024;
 
-	int xRectPos = xOffset - (xRect / 2);
-	int yRectPos = yOffset - (yRect / 2);
+	float xOffset 		= 25;
+	float yOffset 		= screenHeight / 2;
 
-	Rectangle canvas = Rectangle{(float)xOffset - (xRect / 2), (float)yOffset - (yRect / 2), (float)xRect, (float)yRect};
-	//Rectangle rect2 = Rectangle{(float)xOffset - (xRect / 2), (float)yOffset - (yRect / 2), (float)64, (float)64};
-	
-	//DrawRectangleRec(rect, BLACK);
+	float yRectPos 		= yOffset - (canvasHeight / 2);
+
+	Rectangle canvas = Rectangle{xOffset, yRectPos, canvasWidth, canvasHeight};
+
+	int canvasTileWidth = canvasWidth / tileSize;
+
+	for (int i = 0; i < canvasTileWidth; ++i) {
+
+
+		int xTileOffset = xOffset + (i * tileSize);
+		int yTileOffset = yOffset + (i * tileSize);
+
+		//Rectangle
+	}
 
 	InitWindow(screenWidth, screenHeight, "Tilemap Editor");
 
@@ -28,8 +39,6 @@ int main() {
 		BeginDrawing();
 			ClearBackground(RAYWHITE);
 			DrawRectangleRec(canvas, BLACK);
-
-			//DrawRectangleRec(rect2, PINK);
 		EndDrawing();
 	}
 }
