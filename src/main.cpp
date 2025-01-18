@@ -11,34 +11,31 @@ struct Vec2 {
 
 int main() {
 	float tileSize		= 64;
-
 	float canvasWidth	= 1024;
 	float canvasHeight 	= 1024;
-
 	float xOffset 		= 25;
-	float yOffset 		= screenHeight / 2;
-
-	float yRectPos 		= yOffset - (canvasHeight / 2);
-
-	Rectangle canvas = Rectangle{xOffset, yRectPos, canvasWidth, canvasHeight};
+	float yOffset 		= (screenHeight / 2) - (canvasHeight / 2);
 
 	int canvasTileWidth = canvasWidth / tileSize;
-
-	for (int i = 0; i < canvasTileWidth; ++i) {
-
-
-		int xTileOffset = xOffset + (i * tileSize);
-		int yTileOffset = yOffset + (i * tileSize);
-
-		//Rectangle
-	}
 
 	InitWindow(screenWidth, screenHeight, "Tilemap Editor");
 
 	while (!WindowShouldClose()) {
 		BeginDrawing();
 			ClearBackground(RAYWHITE);
-			DrawRectangleRec(canvas, BLACK);
+
+			//Draw the canvas as a grid of tiles
+			for (int i = 0; i < canvasTileWidth; ++i) {
+				for (int j = 0; j < canvasTileWidth; ++j) {			
+					float xTileOffset = xOffset + (j * tileSize);
+					float yTileOffset = yOffset + (i * tileSize);
+
+					Rectangle tile = Rectangle{xTileOffset, yTileOffset, tileSize, tileSize};		
+			
+					if (j + i & 1) DrawRectangleRec(tile, BLACK);
+					else DrawRectangleRec(tile, GRAY);
+				}
+			}
 		EndDrawing();
 	}
 }
