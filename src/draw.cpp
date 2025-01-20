@@ -1,3 +1,4 @@
+#include "data.h"
 #include "draw.h"
 
 #include <raylib.h>
@@ -25,6 +26,12 @@ void load_sprites(std::vector<Texture2D>& entities, std::vector<Texture2D>& tile
 	};
 }
 
+void draw_canvas_border() {
+	float thickness = 3.0;
+	float width		= canvasWidth + (thickness * 2);
+	DrawRectangleLinesEx(Rectangle{xOffset - thickness, yOffset - thickness, width, width}, 3.0, BLACK);
+}
+
 void draw_canvas(std::vector<int>& canvas, std::vector<Texture2D>& entities, std::vector<Texture2D>& tiles, int width, int x, int y, int tileSize) {
 	for (int i = 0; i < canvas.size(); ++i) {
 		int row = i / width;
@@ -35,7 +42,10 @@ void draw_canvas(std::vector<int>& canvas, std::vector<Texture2D>& entities, std
 
 		Rectangle tile = Rectangle{xTileOffset, yTileOffset, (float)tileSize, (float)tileSize};
 		
-		if (canvas[i] > 100) DrawRectangleRec(tile, GRAY);
+		if (canvas[i] > 100) {
+			if (row + col & 1) DrawRectangleRec(tile, RAYWHITE);
+			else DrawRectangleRec(tile, LIGHTGRAY);
+		}
 		else DrawTextureEx(tiles[canvas[i]], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
 	}	
 }
