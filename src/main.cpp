@@ -11,15 +11,19 @@ int main() {
 
 	while (!WindowShouldClose()) {
 		BeginDrawing();
-			ClearBackground(RAYWHITE);
+			ClearBackground(LIGHTGRAY);
 			
 			DrawFPS(0, 0);
 
 			click_in_canvas(xOffset, yOffset, canvasWidth, canvasHeight);
 
 			draw_canvas(canvas, entities, tiles, canvasTileWidth, xOffset, yOffset, tileSize);
-			draw_tile_rect(entities, 3, xOffset + canvasWidth + 25, yOffset, tileSize);
-			draw_tile_rect(tiles, 3, xOffset + canvasWidth + 25, yOffset + 300, tileSize);
+
+			DrawText("Entities", xEntitiesFont, yEntitiesFont, fontSize, BLACK);
+			draw_tile_rect(entities, paletteWidth, xEntitiesOffset, yEntitiesOffset, tileSize);
+
+			DrawText("Tiles", xTilesFont, yTilesFont, fontSize, BLACK);
+			draw_tile_rect(tiles, paletteWidth, xTilesOffset, yTilesOffset, tileSize);
 			
 		EndDrawing();
 	}
