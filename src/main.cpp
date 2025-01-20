@@ -15,22 +15,8 @@ float xOffset 		= 25;
 float yOffset 		= (screenHeight / 2) - (canvasHeight / 2);
 int canvasTileWidth = canvasWidth / tileSize;
 
-struct TileRect {
-	int x;
-	int y;
-
-	int width;
-	int length;
-	std::vector<int> cells;
-
-	TileRect(int x, int y, int width, int length) {
-		this->x 		= x;
-		this->y 		= y;
-		this->width 	= width;
-		this->length 	= length;
-		cells 			= std::vector(0, length);
-	}
-};
+//using INT_MAX cuz we're gonna change this to uint16_t
+std::vector<int> canvas(canvasTileWidth * canvasTileWidth, INT_MAX);
 
 Texture2D load_sprite(const char* path) {
 	Image image = LoadImage(path);
@@ -54,22 +40,19 @@ void load_sprites() {
 	};
 }
 
-void draw_tile_sqr(TileRect sqr) {
-	for (int i = 0; i < sqr.length; ++i) {
+void draw_canvas(std::vector<int>& canvas, int width, int x, int y) {
+	for (int i = 0; i < canvas.size(); ++i) {
+		int row = i / width;
+		int col = i - (row * width);
 
-		int row = i / sqr.width;
-		int col = i - (row * sqr.width);
+		float xTileOffset = x + (col * tileSize);
+		float yTileOffset = y + (row * tileSize);
 
-		float xTileOffset = sqr.x + (col * tileSize);
-		float yTileOffset = sqr.y + (row * tileSize);
-
-		//We draw the sprite from the sprite array here...
-		Rectangle tile = Rectangle{xTileOffset, yTileOffset, tileSize, tileSize};		
-			
-		//this can just be black by default...
-		if (col + row & 1) DrawRectangleRec(tile, BLACK);
-		else DrawRectangleRec(tile, GRAY);
-	}
+		Rectangle tile = Rectangle{xTileOffset, yTileOffset, tileSize, tileSize};
+		
+		if (canvas[i] > 100) DrawRectangleRec(tile, GRAY);
+		else DrawTextureEx(tiles[canvas[i]], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+	}	
 }
 
 void draw_tile_rect(std::vector<Texture2D>& rect, int width, int x, int y) {
@@ -80,32 +63,26 @@ void draw_tile_rect(std::vector<Texture2D>& rect, int width, int x, int y) {
 		float xTileOffset = x + (col * tileSize);
 		float yTileOffset = y + (row * tileSize);
 
-		Rectangle tile = Rectangle{xTileOffset, yTileOffset, tileSize, tileSize};
-			
-		//this can just be black by default...
-		if (col + row & 1) DrawRectangleRec(tile, BLACK);
-		else DrawRectangleRec(tile, GRAY);
-
-		DrawTextureEx(entities[i], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+		Rectangle tile = Rectangle{xTileOffset, yTileOffset, tileSize, tileSize};		
+		DrawRectangleRec(tile, BLACK);
+		DrawTextureEx(rect[i], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
 	}	
 }
 
+//SetWindowIcon to change... window icon
 int main() {
 	InitWindow(screenWidth, screenHeight, "Tilemap Editor");
 	load_sprites();
 
-	TileRect canvas 		= TileRect(xOffset, yOffset, canvasTileWidth, canvasTileWidth * canvasTileWidth);
-	TileRect entityPalette 	= TileRect(xOffset + canvasWidth + 25, yOffset, 3, entities.size());
-	TileRect tilePalette	= TileRect(xOffset + canvasWidth + 25, yOffset + 300, 3, tiles.size());
+	std::cout << canvas.size() << std::endl;
 
 	while (!WindowShouldClose()) {
 		BeginDrawing();
 			ClearBackground(RAYWHITE);
 
-			draw_tile_sqr(canvas);
-			//only draw black background on palettes...
-			draw_tile_rect(entities, 3, entityPalette.x, entityPalette.y);
-			draw_tile_sqr(tilePalette);
+			draw_canvas(canvas, canvasTileWidth, xOffset, yOffset);
+			draw_tile_rect(entities, 3, xOffset + canvasWidth + 25, yOffset);
+			draw_tile_rect(tiles, 3, xOffset + canvasWidth + 25, yOffset + 300);
 			
 		EndDrawing();
 	}
