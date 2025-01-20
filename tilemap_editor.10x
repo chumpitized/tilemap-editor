@@ -8,7 +8,7 @@
 		<ShowEmptyFolders>true</ShowEmptyFolders>
 		<IncludeFilesWithoutExt>false</IncludeFilesWithoutExt>
 		<IsFolder>false</IsFolder>
-		<BuildCommand>g++ src/main.cpp -o bin/main -I include/ -L lib/ -lraylib -lopengl32 -lgdi32 -lwinmm</BuildCommand>
+		<BuildCommand>g++ src/main.cpp src/draw.cpp src/input.cpp src/data.cpp -o bin/main -I include/ -L lib/ -lraylib -lopengl32 -lgdi32 -lwinmm</BuildCommand>
 		<RebuildCommand></RebuildCommand>
 		<BuildFileCommand></BuildFileCommand>
 		<CleanCommand></CleanCommand>
