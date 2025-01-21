@@ -14,6 +14,9 @@ extern float xOffset;
 extern float yOffset;
 extern int canvasTileWidth;
 
+//extern storedTileOrEntity;
+
+extern int paletteWidthP;
 extern int paletteWidth;
 
 extern int fontSize;

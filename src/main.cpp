@@ -11,11 +11,14 @@ int main() {
 
 	while (!WindowShouldClose()) {
 		click_in_canvas(xOffset, yOffset, canvasWidth, canvasHeight);
+		click_in_entities(xEntitiesOffset, yEntitiesOffset);
+		click_in_tiles(xTilesOffset, yTilesOffset);
+
 
 		BeginDrawing();
 
 			//Draw
-			ClearBackground(LIGHTGRAY);
+			ClearBackground(GRAY);
 			DrawFPS(0, 0);
 
 			//Draw Canvas
