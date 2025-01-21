@@ -1,14 +1,12 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <vector>
 #include <raylib.h>
-
-static void update_canvas(int x, int y);
 
 void handle_left_mouse_click();
 
-bool is_click_in_canvas();
-bool is_click_in_entities();
-bool is_click_in_tiles();
+int in_canvas();
+int in_palette(std::vector<Texture2D>& palette, int xOffset, int yOffset);
 
 #endif
