@@ -5,74 +5,86 @@
 #include <vector>
 #include <iostream>
 
-void update_canvas(int x, int y) {
+static void update_canvas(int x, int y) {
 	int xTile = x / tileSize;
 	int yTile = y / tileSize;
 
 	int index = (yTile * canvasTileWidth) + xTile;
 	
-	//use tile or entity from stored value
 	canvas[index] = 2;
 }
 
-void click_in_canvas(int xOffset, int yOffset, int canvasWidth, int canvasHeight) {
+void handle_left_mouse_click() {
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 		Vector2 mousePos = GetMousePosition();
 
-		int x = mousePos.x - xOffset;
-		int y = mousePos.y - yOffset;
+		if (is_click_in_canvas()) {
+			std::cout << "updating canvas..." << std::endl;
+			update_canvas(mousePos.x - xOffset, mousePos.y - yOffset);
+		}
 
-		if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
-			std::cout << "in canvas" << std::endl;
-			update_canvas(x, y);
+		if (is_click_in_entities()) {
+			std::cout << "storing entity..." << std::endl;
+		}
+
+		if (is_click_in_tiles()) {
+			std::cout << "storing tile..." << std::endl;
 		}
 	}
 }
 
-void click_in_entities(int xOffset, int yOffset) {
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-		Vector2 mousePos = GetMousePosition();
-		
-		int x = mousePos.x - xOffset;
-		int y = mousePos.y - yOffset;
-		int fullRowHeight = (entities.size() / 3) * tileSize;
+bool is_click_in_canvas() {
+	Vector2 mousePos = GetMousePosition();
 
-		if (fullRowHeight > 0 && x >= 0 && x < paletteWidthP && y >= 0 && y < fullRowHeight) {
-			std::cout << "in palette 1" << std::endl;
-		}
+	int x = mousePos.x - xOffset;
+	int y = mousePos.y - yOffset;
 
-		int unfinishedRowLength = (entities.size() % 3) * tileSize;
-
-		y = y - fullRowHeight;
-
-		if (x >= 0 && x < unfinishedRowLength && y >= 0 && y < tileSize) {
-			std::cout << "in palette 2" << std::endl;
-		}
-
+	if (x >= 0 && x < canvasWidth && y >= 0 && y < canvasHeight) {
+		return true;
 	}
+	return false;
 }
 
-void click_in_tiles(int xOffset, int yOffset) {
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-		Vector2 mousePos = GetMousePosition();
+bool is_click_in_entities() {
+	Vector2 mousePos = GetMousePosition();
 		
-		int x 				= mousePos.x - xOffset;
-		int y 				= mousePos.y - yOffset;
-		int fullRows 		= tiles.size() / 3;
-		int fullRowHeight 	= fullRows * tileSize;
+	int x = mousePos.x - xEntitiesOffset;
+	int y = mousePos.y - yEntitiesOffset;
+	int fullRowHeight = (entities.size() / 3) * tileSize;
 
-		if (fullRowHeight > 0 && x >= 0 && x < paletteWidthP && y >= 0 && y < fullRowHeight) {
-			std::cout << "in tiles 1" << std::endl;
-		}
-
-		int partialRow 			= tiles.size() % 3;
-		int partialRowLength 	= partialRow * tileSize;
-
-		y = y - fullRowHeight;
-
-		if (x >= 0 && x < partialRowLength && y >= 0 && y < tileSize) {
-			std::cout << "in tiles 2" << std::endl;
-		}
-
+	if (fullRowHeight > 0 && x >= 0 && x < paletteWidthP && y >= 0 && y < fullRowHeight) {
+		return true;
 	}
+
+	int unfinishedRowLength = (entities.size() % 3) * tileSize;
+
+	y = y - fullRowHeight;
+
+	if (x >= 0 && x < unfinishedRowLength && y >= 0 && y < tileSize) {
+		return true;
+	}
+	return false;
+}
+
+bool is_click_in_tiles() {
+	Vector2 mousePos = GetMousePosition();
+		
+	int x 				= mousePos.x - xTilesOffset;
+	int y 				= mousePos.y - yTilesOffset;
+	int fullRows 		= tiles.size() / 3;
+	int fullRowHeight 	= fullRows * tileSize;
+
+	if (fullRowHeight > 0 && x >= 0 && x < paletteWidthP && y >= 0 && y < fullRowHeight) {
+		return true;
+	}
+
+	int partialRow 			= tiles.size() % 3;
+	int partialRowLength 	= partialRow * tileSize;
+
+	y = y - fullRowHeight;
+
+	if (x >= 0 && x < partialRowLength && y >= 0 && y < tileSize) {
+		return true;
+	}
+	return false;
 }

@@ -10,14 +10,11 @@ int main() {
 	load_sprites(entities, tiles);
 
 	while (!WindowShouldClose()) {
-		click_in_canvas(xOffset, yOffset, canvasWidth, canvasHeight);
-		click_in_entities(xEntitiesOffset, yEntitiesOffset);
-		click_in_tiles(xTilesOffset, yTilesOffset);
+		//Input
+		handle_left_mouse_click();
 
-
+		//Draw
 		BeginDrawing();
-
-			//Draw
 			ClearBackground(GRAY);
 			DrawFPS(0, 0);
 
@@ -32,7 +29,6 @@ int main() {
 			//Draw Tile Palette
 			DrawText("Tiles", xTilesFont, yTilesFont, fontSize, BLACK);
 			draw_tile_rect(tiles, paletteWidth, xTilesOffset, yTilesOffset, tileSize);
-			
 		EndDrawing();
 	}
 }
