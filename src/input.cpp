@@ -43,7 +43,7 @@ void click_in_entities(int xOffset, int yOffset) {
 
 		int unfinishedRowLength = (entities.size() % 3) * tileSize;
 
-		y = y + fullRowHeight;
+		y = y - fullRowHeight;
 
 		if (x >= 0 && x < unfinishedRowLength && y >= 0 && y < tileSize) {
 			std::cout << "in palette 2" << std::endl;
@@ -68,7 +68,7 @@ void click_in_tiles(int xOffset, int yOffset) {
 		int partialRow 			= tiles.size() % 3;
 		int partialRowLength 	= partialRow * tileSize;
 
-		y = y + fullRowHeight;
+		y = y - fullRowHeight;
 
 		if (x >= 0 && x < partialRowLength && y >= 0 && y < tileSize) {
 			std::cout << "in tiles 2" << std::endl;
