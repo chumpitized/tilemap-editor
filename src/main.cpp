@@ -29,6 +29,9 @@ int main() {
 			//Draw Tile Palette
 			DrawText("Tiles", xTilesFont, yTilesFont, fontSize, BLACK);
 			draw_tile_rect(tiles, paletteWidth, xTilesOffset, yTilesOffset, tileSize);
+
+			//Draw Hover Tile
+			handle_mouse_hover();
 		EndDrawing();
 	}
 }

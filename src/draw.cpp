@@ -50,6 +50,7 @@ void draw_canvas(std::vector<int>& canvas, std::vector<Texture2D>& entities, std
 	}	
 }
 
+//can rename to palette...
 void draw_tile_rect(std::vector<Texture2D>& rect, int width, int x, int y, int tileSize) {
 	for (int i = 0; i < rect.size(); ++i) {
 		int row = i / width;
