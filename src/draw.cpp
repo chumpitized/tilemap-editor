@@ -32,7 +32,7 @@ void draw_canvas_border() {
 	DrawRectangleLinesEx(Rectangle{xOffset - thickness, yOffset - thickness, width, width}, 3.0, BLACK);
 }
 
-void draw_canvas(std::vector<int>& canvas, std::vector<Texture2D>& entities, std::vector<Texture2D>& tiles, int width, int x, int y, int tileSize) {
+void draw_canvas(std::vector<u16>& canvas, std::vector<Texture2D>& entities, std::vector<Texture2D>& tiles, int width, int x, int y, int tileSize) {
 	for (int i = 0; i < canvas.size(); ++i) {
 		int row = i / width;
 		int col = i - (row * width);

@@ -10,13 +10,25 @@ void handle_mouse_hover() {
 
 	int index = in_canvas(mousePos);
 	if (index >= 0) {
-		std::cout << "drawing at canvas index: " << index << std::endl;
+		std::cout << "drawing example at canvas index: " << index << std::endl;
 
-		int y = ((index / canvasTileWidth) * tileSize) + yOffset;
-		int x = ((index % canvasTileWidth) * tileSize) + xOffset;
+		float y = ((index / canvasTileWidth) * tileSize) + yOffset;
+		float x = ((index % canvasTileWidth) * tileSize) + xOffset;
 
-		if (storedTileOrEntity >= 0) DrawTextureEx(tiles[storedTileOrEntity], Vector2{x,y}, 0, 4, RAYWHITE);
-		return;
+		if (storedTileOrEntity >= 0) DrawTextureEx(tiles[storedTileOrEntity], Vector2{x,y}, 0, 4.0, RAYWHITE);
+	}
+}
+
+void handle_right_mouse_click() {
+	if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+		Vector2 mousePos = GetMousePosition();
+
+		int index = in_canvas(mousePos);
+		if (index >= 0) {
+			std::cout << "erasing at canvas index: " << index << std::endl;
+			canvas[index] = -1;
+			return;
+		}	
 	}
 }
 
@@ -44,6 +56,18 @@ void handle_left_mouse_click() {
 		if (index >= 0) {
 			storedTileOrEntity = index;
 			std::cout << "storing tile index: " << index <<  std::endl;
+		}
+	}
+
+	if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+		Vector2 mousePos = GetMousePosition();
+
+		//Canvas
+		int index = in_canvas(mousePos);
+		if (index >= 0) {
+			std::cout << "updating canvas at index: " << index << std::endl;
+			if (storedTileOrEntity >= 0) canvas[index] = storedTileOrEntity;
+			return;
 		}
 	}
 }
