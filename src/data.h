@@ -8,8 +8,18 @@
 typedef uint8_t u8;
 typedef uint16_t u16;
 
+struct StoredTile {
+	bool isEntity;
+	u8 storedIndex;
+
+	StoredTile(bool isEntity, u8 storedIndex) {
+		this->isEntity 		= isEntity;
+		this->storedIndex 	= storedIndex;
+	}
+};
+
 //Draw
-extern u8 storedTileOrEntity;
+extern StoredTile storedTile;
 
 //Window
 extern int screenWidth;

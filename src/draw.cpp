@@ -13,11 +13,11 @@ RenderTexture2D draw_setup(int screenWidth, int screenHeight) {
 
 		//Draw Entity Palette
 		DrawText("Entities", xEntitiesFont, yEntitiesFont, fontSize, BLACK);
-		draw_tile_rect(entities, paletteWidth, xEntitiesOffset, yEntitiesOffset, tileSize);
+		draw_palette(entities, paletteWidth, xEntitiesOffset, yEntitiesOffset, tileSize);
 
 		//Draw Tile Palette
 		DrawText("Tiles", xTilesFont, yTilesFont, fontSize, BLACK);
-		draw_tile_rect(tiles, paletteWidth, xTilesOffset, yTilesOffset, tileSize);
+		draw_palette(tiles, paletteWidth, xTilesOffset, yTilesOffset, tileSize);
 	EndTextureMode();
 	
 	return texture;
@@ -59,21 +59,30 @@ void draw_canvas(RenderTexture2D& texture, std::vector<u16>& canvas, std::vector
 
 		float xTileOffset = x + (col * tileSize);
 		float yTileOffset = y + (row * tileSize);
-
-		Rectangle tile = Rectangle{xTileOffset, yTileOffset, (float)tileSize, (float)tileSize};
 		
-		if (canvas[i] > 100) {
+		if (canvas[i] == 0xffff) {
+			Rectangle tile = Rectangle{xTileOffset, yTileOffset, (float)tileSize, (float)tileSize};
+
 			if (row + col & 1) DrawRectangleRec(tile, RAYWHITE);
 			else DrawRectangleRec(tile, LIGHTGRAY);
 		}
-		else DrawTextureEx(tiles[canvas[i]], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+		else {
+			u16 tile 	= canvas[i];
+			u8 tileByte = tile;
+			u8 entityByte = tile >> 8;
+
+		
+			DrawTextureEx(tiles[tileByte], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+			DrawTextureEx(entities[entityByte], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+
+		}
 	}
 	EndTextureMode();
 }
 
 //can rename to palette...
-void draw_tile_rect(std::vector<Texture2D>& rect, int width, int x, int y, int tileSize) {
-	for (int i = 0; i < rect.size(); ++i) {
+void draw_palette(std::vector<Texture2D>& palette, int width, int x, int y, int tileSize) {
+	for (int i = 0; i < palette.size(); ++i) {
 		int row = i / width;
 		int col = i - (row * width);
 
@@ -82,6 +91,6 @@ void draw_tile_rect(std::vector<Texture2D>& rect, int width, int x, int y, int t
 
 		Rectangle tile = Rectangle{xTileOffset, yTileOffset, (float)tileSize, (float)tileSize};
 		DrawRectangleRec(tile, BLACK);
-		DrawTextureEx(rect[i], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+		DrawTextureEx(palette[i], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
 	}	
 }

@@ -8,7 +8,7 @@
 void reset_canvas() {
 	if (IsKeyPressed(KEY_R)) {
 		for (int i = 0; i < canvas.size(); ++i) {
-			canvas[i] = -1;
+			canvas[i] = 0xffff;
 		}
 	}
 }
@@ -29,7 +29,7 @@ void handle_mouse_hover() {
 	} else {
 		std::cout << "drawing example tile at canvas index: " << index << std::endl;
 
-		if (storedTileOrEntity >= 0) DrawTextureEx(tiles[storedTileOrEntity], Vector2{x,y}, 0, 4.0, RAYWHITE);
+		if (storedTile.storedIndex >= 0) DrawTextureEx(tiles[storedTile.storedIndex], Vector2{x,y}, 0, 4.0, RAYWHITE);
 	}
 }
 
@@ -40,7 +40,7 @@ void handle_right_mouse_click() {
 		int index = in_canvas(mousePos);
 		if (index >= 0) {
 			std::cout << "erasing at canvas index: " << index << std::endl;
-			canvas[index] = -1;
+			canvas[index] = 0xffff;
 			return;
 		}	
 	}
@@ -53,14 +53,16 @@ void handle_left_mouse_click() {
 		//Entities
 		int index = in_palette(entities, xEntitiesOffset, yEntitiesOffset, mousePos);
 		if (index >= 0) {
-			storedTileOrEntity = index;
+			storedTile.storedIndex 	= index;
+			storedTile.isEntity 	= true;
 			std::cout << "storing entity index: " << index << std::endl;
 		}
 
 		//Tiles
 		index = in_palette(tiles, xTilesOffset, yTilesOffset, mousePos);
 		if (index >= 0) {
-			storedTileOrEntity = index;
+			storedTile.storedIndex 	= index;
+			storedTile.isEntity		= false;
 			std::cout << "storing tile index: " << index <<  std::endl;
 		}
 	}
@@ -74,7 +76,7 @@ void handle_left_mouse_held() {
 		int index = in_canvas(mousePos);
 		if (index >= 0) {
 			std::cout << "updating canvas at index: " << index << std::endl;
-			if (storedTileOrEntity >= 0) canvas[index] = storedTileOrEntity;
+			if (storedTile.storedIndex >= 0) canvas[index] = storedTile.storedIndex;
 			return;
 		}
 	}

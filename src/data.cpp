@@ -3,7 +3,7 @@
 #include <vector>
 
 //Draw
-u8 storedTileOrEntity = 0;
+StoredTile storedTile = StoredTile(false, 0);
 
 //Window
 int screenWidth 	= 1295;
@@ -39,4 +39,4 @@ int yTilesOffset	= yTilesFont + fontSize + 10;
 //Arrays
 std::vector<Texture2D> entities;
 std::vector<Texture2D> tiles;
-std::vector<u16> canvas(canvasTileWidth * canvasTileWidth, 200);
+std::vector<u16> canvas(canvasTileWidth * canvasTileWidth, 0xffff);
