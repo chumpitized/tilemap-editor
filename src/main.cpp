@@ -8,35 +8,24 @@
 int main() {
 	InitWindow(screenWidth, screenHeight, "Tilemap Editor");
 	load_sprites(entities, tiles);
+	RenderTexture2D texture = draw_setup(screenWidth, screenHeight);
 
 	while (!WindowShouldClose()) {
 		//Input
 		handle_left_mouse_click();
 		handle_left_mouse_held();
 		handle_left_mouse_release();
-
 		handle_right_mouse_click();
-
 		reset_canvas();
 
 		//Draw
-		BeginDrawing();
-			ClearBackground(GRAY);
-			DrawFPS(0, 0);
-
-			//Draw Canvas
-			draw_canvas(canvas, entities, tiles, canvasTileWidth, xOffset, yOffset, tileSize);
-			draw_canvas_border();
 		
-			//Draw Entity Palette
-			DrawText("Entities", xEntitiesFont, yEntitiesFont, fontSize, BLACK);
-			draw_tile_rect(entities, paletteWidth, xEntitiesOffset, yEntitiesOffset, tileSize);
+		//if we want, we can call this only when update...
+		draw_canvas(texture, canvas, entities, tiles, canvasTileWidth, xOffset, yOffset, tileSize);
 
-			//Draw Tile Palette
-			DrawText("Tiles", xTilesFont, yTilesFont, fontSize, BLACK);
-			draw_tile_rect(tiles, paletteWidth, xTilesOffset, yTilesOffset, tileSize);
-
-			//Draw Hover Tile
+		BeginDrawing();
+			DrawTextureRec(texture.texture, (Rectangle){0, 0, (float)texture.texture.width, -(float)texture.texture.height}, (Vector2){0, 0}, RAYWHITE);
+			DrawFPS(0, 0);
 			handle_mouse_hover();
 		EndDrawing();
 	}

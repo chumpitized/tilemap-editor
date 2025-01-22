@@ -3,7 +3,7 @@
 #include <vector>
 
 //Draw
-int storedTileOrEntity = -1;
+u8 storedTileOrEntity = 0;
 
 //Window
 int screenWidth 	= 1295;

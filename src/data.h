@@ -5,10 +5,11 @@
 #include <raylib.h>
 #include <vector>
 
+typedef uint8_t u8;
 typedef uint16_t u16;
 
 //Draw
-extern int storedTileOrEntity;
+extern u8 storedTileOrEntity;
 
 //Window
 extern int screenWidth;

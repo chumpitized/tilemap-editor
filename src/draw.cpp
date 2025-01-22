@@ -4,6 +4,25 @@
 #include <raylib.h>
 #include <vector>
 
+RenderTexture2D draw_setup(int screenWidth, int screenHeight) {
+	RenderTexture2D texture = LoadRenderTexture(screenWidth, screenHeight);
+	
+	BeginTextureMode(texture);
+		ClearBackground(GRAY);
+		draw_canvas_border();
+
+		//Draw Entity Palette
+		DrawText("Entities", xEntitiesFont, yEntitiesFont, fontSize, BLACK);
+		draw_tile_rect(entities, paletteWidth, xEntitiesOffset, yEntitiesOffset, tileSize);
+
+		//Draw Tile Palette
+		DrawText("Tiles", xTilesFont, yTilesFont, fontSize, BLACK);
+		draw_tile_rect(tiles, paletteWidth, xTilesOffset, yTilesOffset, tileSize);
+	EndTextureMode();
+	
+	return texture;
+}
+
 Texture2D load_sprite(const char* path) {
 	Image image = LoadImage(path);
 	Texture2D texture = LoadTextureFromImage(image);
@@ -32,7 +51,8 @@ void draw_canvas_border() {
 	DrawRectangleLinesEx(Rectangle{xOffset - thickness, yOffset - thickness, width, width}, 3.0, BLACK);
 }
 
-void draw_canvas(std::vector<u16>& canvas, std::vector<Texture2D>& entities, std::vector<Texture2D>& tiles, int width, int x, int y, int tileSize) {
+void draw_canvas(RenderTexture2D& texture, std::vector<u16>& canvas, std::vector<Texture2D>& entities, std::vector<Texture2D>& tiles, int width, int x, int y, int tileSize) {
+	BeginTextureMode(texture);
 	for (int i = 0; i < canvas.size(); ++i) {
 		int row = i / width;
 		int col = i - (row * width);
@@ -47,7 +67,8 @@ void draw_canvas(std::vector<u16>& canvas, std::vector<Texture2D>& entities, std
 			else DrawRectangleRec(tile, LIGHTGRAY);
 		}
 		else DrawTextureEx(tiles[canvas[i]], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
-	}	
+	}
+	EndTextureMode();
 }
 
 //can rename to palette...
