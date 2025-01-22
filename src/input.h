@@ -4,8 +4,13 @@
 #include <vector>
 #include <raylib.h>
 
+void reset_canvas();
+
 void handle_mouse_hover();
 void handle_left_mouse_click();
+void handle_left_mouse_held();
+void handle_left_mouse_release();
+
 void handle_right_mouse_click();
 
 int in_canvas(Vector2 mousePos);

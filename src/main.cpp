@@ -12,7 +12,12 @@ int main() {
 	while (!WindowShouldClose()) {
 		//Input
 		handle_left_mouse_click();
+		handle_left_mouse_held();
+		handle_left_mouse_release();
+
 		handle_right_mouse_click();
+
+		reset_canvas();
 
 		//Draw
 		BeginDrawing();
