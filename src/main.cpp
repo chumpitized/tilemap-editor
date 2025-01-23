@@ -1,6 +1,7 @@
 #include "draw.h"
 #include "input.h"
 #include "data.h"
+#include "save.h"
 
 #include <raylib.h>
 
@@ -21,6 +22,12 @@ int main() {
 		undo();
 		//Draw
 		
+		if (IsKeyPressed(KEY_I)) {
+			save();
+		}
+
+
+
 		//if we want, we can call this only when update...
 		draw_canvas(texture, canvas, entities, tiles, canvasTileWidth, xOffset, yOffset, tileSize);
 
