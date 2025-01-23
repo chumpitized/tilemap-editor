@@ -13,6 +13,7 @@ void reset_canvas() {
 	}
 }
 
+//the hover doesn't work well when you're drawing tiles on cells with entities...
 void handle_mouse_hover() {
 	Vector2 mousePos = GetMousePosition();
 	int index = in_canvas(mousePos);
@@ -29,7 +30,13 @@ void handle_mouse_hover() {
 	} else {
 		std::cout << "drawing example tile at canvas index: " << index << std::endl;
 
-		if (storedTile.storedIndex >= 0) DrawTextureEx(tiles[storedTile.storedIndex], Vector2{x,y}, 0, 4.0, RAYWHITE);
+		if (storedTile.storedIndex >= 0) {
+			if (storedTile.isEntity) {
+				DrawTextureEx(entities[storedTile.storedIndex], Vector2{x,y}, 0, 4.0, RAYWHITE);
+			} else {
+				DrawTextureEx(tiles[storedTile.storedIndex], Vector2{x,y}, 0, 4.0, RAYWHITE);
+			}
+		}
 	}
 }
 
@@ -76,8 +83,27 @@ void handle_left_mouse_held() {
 		int index = in_canvas(mousePos);
 		if (index >= 0) {
 			std::cout << "updating canvas at index: " << index << std::endl;
-			if (storedTile.storedIndex >= 0) canvas[index] = storedTile.storedIndex;
-			return;
+
+			if (storedTile.isEntity) {
+				u16 canvasTile 	= canvas[index];
+				u16 mask 		= 0x00ff; 
+				u16 masked 		= canvasTile & mask;
+				u16 replacement	= storedTile.storedIndex << 8 | masked;
+				
+				canvas[index] = replacement;
+				return;
+			} else {
+				u16 canvasTile 	= canvas[index];
+				u16 mask 		= 0xff00;
+				u16 masked		= canvas[index] & mask;
+				u16 replacement = masked | storedTile.storedIndex;
+
+				canvas[index] = replacement;
+				return;
+				
+				//if (storedTile.storedIndex >= 0) canvas[index] = storedTile.storedIndex;
+				//return;
+			}
 		}
 	}
 }

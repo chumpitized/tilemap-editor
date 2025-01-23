@@ -60,22 +60,20 @@ void draw_canvas(RenderTexture2D& texture, std::vector<u16>& canvas, std::vector
 		float xTileOffset = x + (col * tileSize);
 		float yTileOffset = y + (row * tileSize);
 		
-		if (canvas[i] == 0xffff) {
+		//if (canvas[i] == 0xffff) {
 			Rectangle tile = Rectangle{xTileOffset, yTileOffset, (float)tileSize, (float)tileSize};
 
 			if (row + col & 1) DrawRectangleRec(tile, RAYWHITE);
 			else DrawRectangleRec(tile, LIGHTGRAY);
-		}
-		else {
-			u16 tile 	= canvas[i];
-			u8 tileByte = tile;
-			u8 entityByte = tile >> 8;
 
-		
-			DrawTextureEx(tiles[tileByte], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
-			DrawTextureEx(entities[entityByte], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+			u16 canvasTile 	= canvas[i];
+			u8 tileByte 	= canvasTile;
+			u8 entityByte 	= canvasTile >> 8;
 
-		}
+			if (tileByte != 0xff) DrawTextureEx(tiles[tileByte], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+			if (entityByte != 0xff) DrawTextureEx(entities[entityByte], Vector2{xTileOffset, yTileOffset}, (float)0, (float)4, RAYWHITE);
+
+		//}
 	}
 	EndTextureMode();
 }
