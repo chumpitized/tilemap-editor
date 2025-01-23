@@ -1,9 +1,21 @@
 #include "input.h"
 #include "data.h"
+#include "undo.h"
 
 #include <raylib.h>
 #include <vector>
 #include <iostream>
+
+void undo() {
+	if ( IsKeyPressed(KEY_Z)) {
+		std::cout << "got here" << std::endl;
+		if (!history.empty()) {
+			canvas = history.back();
+			history.pop_back();
+
+		}
+	}
+}
 
 void reset_canvas() {
 	if (IsKeyPressed(KEY_R)) {
@@ -13,7 +25,6 @@ void reset_canvas() {
 	}
 }
 
-//the hover doesn't work well when you're drawing tiles on cells with entities...
 void handle_mouse_hover() {
 	Vector2 mousePos = GetMousePosition();
 	int index = in_canvas(mousePos);
@@ -24,12 +35,8 @@ void handle_mouse_hover() {
 	float x = ((index % canvasTileWidth) * tileSize) + xOffset;
 
 	if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-		std::cout << "drawing red outline for erase at canvas index: " << index << std::endl;
-
 		DrawRectangleLinesEx(Rectangle{x, y, tileSize, tileSize}, 6, RED);
 	} else {
-		std::cout << "drawing example tile at canvas index: " << index << std::endl;
-
 		if (storedTile.storedIndex >= 0) {
 			if (storedTile.isEntity) {
 				DrawTextureEx(entities[storedTile.storedIndex], Vector2{x,y}, 0, 4.0, RAYWHITE);
@@ -41,12 +48,22 @@ void handle_mouse_hover() {
 }
 
 void handle_right_mouse_click() {
+	if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+		Vector2 mousePos = GetMousePosition();
+		
+		int index = in_canvas(mousePos);
+		if (index >= 0) {
+			history.push_back(canvas);
+		}
+	}
+}
+
+void handle_right_mouse_held() {
 	if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 		Vector2 mousePos = GetMousePosition();
 
 		int index = in_canvas(mousePos);
 		if (index >= 0) {
-			std::cout << "erasing at canvas index: " << index << std::endl;
 			canvas[index] = 0xffff;
 			return;
 		}	
@@ -57,12 +74,16 @@ void handle_left_mouse_click() {
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 		Vector2 mousePos = GetMousePosition();
 
+		int index = in_canvas(mousePos);
+		if (index >= 0) {
+			history.push_back(canvas);
+		}
+
 		//Entities
-		int index = in_palette(entities, xEntitiesOffset, yEntitiesOffset, mousePos);
+		index = in_palette(entities, xEntitiesOffset, yEntitiesOffset, mousePos);
 		if (index >= 0) {
 			storedTile.storedIndex 	= index;
 			storedTile.isEntity 	= true;
-			std::cout << "storing entity index: " << index << std::endl;
 		}
 
 		//Tiles
@@ -70,7 +91,6 @@ void handle_left_mouse_click() {
 		if (index >= 0) {
 			storedTile.storedIndex 	= index;
 			storedTile.isEntity		= false;
-			std::cout << "storing tile index: " << index <<  std::endl;
 		}
 	}
 }
@@ -82,8 +102,6 @@ void handle_left_mouse_held() {
 		//Canvas
 		int index = in_canvas(mousePos);
 		if (index >= 0) {
-			std::cout << "updating canvas at index: " << index << std::endl;
-
 			if (storedTile.isEntity) {
 				u16 canvasTile 	= canvas[index];
 				u16 mask 		= 0x00ff; 
@@ -91,7 +109,6 @@ void handle_left_mouse_held() {
 				u16 replacement	= storedTile.storedIndex << 8 | masked;
 				
 				canvas[index] = replacement;
-				return;
 			} else {
 				u16 canvasTile 	= canvas[index];
 				u16 mask 		= 0xff00;
@@ -99,10 +116,6 @@ void handle_left_mouse_held() {
 				u16 replacement = masked | storedTile.storedIndex;
 
 				canvas[index] = replacement;
-				return;
-				
-				//if (storedTile.storedIndex >= 0) canvas[index] = storedTile.storedIndex;
-				//return;
 			}
 		}
 	}

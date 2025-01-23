@@ -16,8 +16,9 @@ int main() {
 		handle_left_mouse_held();
 		handle_left_mouse_release();
 		handle_right_mouse_click();
+		handle_right_mouse_held();
 		reset_canvas();
-
+		undo();
 		//Draw
 		
 		//if we want, we can call this only when update...
