@@ -20,6 +20,7 @@ void reset_canvas() {
 		for (int i = 0; i < canvas.size(); ++i) {
 			canvas[i] = 0xffff;
 		}
+		history.clear();
 	}
 }
 

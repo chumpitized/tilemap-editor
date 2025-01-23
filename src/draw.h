@@ -5,6 +5,8 @@
 #include <raylib.h>
 #include <vector>
 
+void draw_selected_palette_tile();
+
 RenderTexture2D draw_setup(int screenWidth, int screenHeight);
 Texture2D load_sprite(const char* path);
 void load_sprites(std::vector<Texture2D>& entities, std::vector<Texture2D>& tiles);

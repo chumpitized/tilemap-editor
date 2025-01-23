@@ -28,6 +28,7 @@ int main() {
 			DrawTextureRec(texture.texture, (Rectangle){0, 0, (float)texture.texture.width, -(float)texture.texture.height}, (Vector2){0, 0}, RAYWHITE);
 			DrawFPS(0, 0);
 			handle_mouse_hover();
+			draw_selected_palette_tile();
 		EndDrawing();
 	}
 }

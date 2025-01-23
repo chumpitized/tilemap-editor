@@ -4,6 +4,22 @@
 #include <raylib.h>
 #include <vector>
 
+void draw_selected_palette_tile() {
+	if (storedTile.isEntity) {
+		int index = storedTile.storedIndex;
+		float y = ((index / paletteWidth) * tileSize) + yEntitiesOffset;
+		float x = ((index % paletteWidth) * tileSize) + xEntitiesOffset;
+
+		DrawRectangleLinesEx(Rectangle{x, y, 64, 64}, 4, RED);
+	} else {
+		int index = storedTile.storedIndex;
+		float y = ((index / paletteWidth) * tileSize) + yTilesOffset;
+		float x = ((index % paletteWidth) * tileSize) + xTilesOffset;
+
+		DrawRectangleLinesEx(Rectangle{x, y, 64, 64}, 4, RED);
+	}
+}
+
 RenderTexture2D draw_setup(int screenWidth, int screenHeight) {
 	RenderTexture2D texture = LoadRenderTexture(screenWidth, screenHeight);
 	
