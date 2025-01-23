@@ -2,5 +2,7 @@
 #define SAVE_H
 
 void save();
+void read();
+
 
 #endif
