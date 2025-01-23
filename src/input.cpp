@@ -7,12 +7,10 @@
 #include <iostream>
 
 void undo() {
-	if ( IsKeyPressed(KEY_Z)) {
-		std::cout << "got here" << std::endl;
+	if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_Z)) {
 		if (!history.empty()) {
 			canvas = history.back();
 			history.pop_back();
-
 		}
 	}
 }
