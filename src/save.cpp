@@ -1,5 +1,6 @@
 #include "save.h"
 #include "data.h"
+#include "input.h"
 
 #include <fstream>
 #include <iostream>
@@ -69,7 +70,8 @@ void save() {
 void read() {
 	std::fstream file;
     file.open("save/new_puzzle", std::ios::in | std::ios::binary);
- 
+ 	std::vector<u16> puzzle;
+
 	//save puzzle to file
 	if (file) {
 		file.seekg(0, file.end);
@@ -84,6 +86,30 @@ void read() {
 		for (int i = 0; i < length; ++i) {
 			std::cout << i << ": " << +buffer[i] << std::endl;
 		}
+
+		for (int i = 0; i < length; i+=2) {
+			u16 left = buffer[i] << 8;
+			u16 tile = left | buffer[i + 1];
+			puzzle.push_back(tile);
+		}
+
+		for (int i = 0; i < canvas.size(); ++i) {
+			canvas[i] = 0xffff;
+		}
+
+		//ideally we would center the level...
+		u8 width = buffer[length - 4];
+		u8 height = buffer[length - 3];
+
+		for (int i = 0; i < puzzle.size() - 2; ++i) {
+			int row = i / width;
+			int col = i % width;
+
+			int index = (row * canvasTileWidth) + col;
+
+			canvas[index] = puzzle[i];
+		}
+
 	}
 
 }
