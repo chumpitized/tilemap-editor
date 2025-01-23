@@ -1,6 +1,7 @@
 #include "save.h"
 #include "data.h"
 
+#include <fstream>
 #include <iostream>
 #include <vector>
 
@@ -9,7 +10,6 @@ void save() {
 	std::vector<u16> trimmedCanvas;
 	int rowWidth 		= 0;
 	int expectedWidth 	= 0;
-	bool isValid = true;
 
 	for (auto val : canvas) {
 		if (val != 0xffff) {
@@ -19,17 +19,37 @@ void save() {
 		
 		if (val == 0xffff && rowWidth > 0) {
 			if (expectedWidth > 0 && rowWidth != expectedWidth) {
+				std::cout << "SAVE FAILED" << std::endl;
 				std::cout << "ERROR: PUZZLE IS NOT A RECTANGLE" << std::endl;
-				isValid = false;
-				std::cout << "NOT SAVING..." << std::endl;
+				return;
 			}
 			expectedWidth = rowWidth;
 			rowWidth = 0;
 		}
 	}
 
-	if (isValid) std::cout << "valid puzzle -- saving..." << std::endl;
+	int height = (trimmedCanvas.size() / expectedWidth);
 
-	//std::cout << expectedWidth << std::endl;
-	//std::cout << trimmedCanvas.size() << std::endl;
+	std::fstream file;
+    file.open("save/new_puzzle", std::ios::out | std::ios::binary);
+ 
+	//save puzzle to file
+	if (file) {
+		int length = trimmedCanvas.size() * 2;
+		uint8_t buffer[length];
+
+		for (int i = 0; i < trimmedCanvas.size(); i+=2) {
+			buffer[i] 		= trimmedCanvas[i] >> 8;
+			buffer[i + 1] 	= trimmedCanvas[i]; 
+		}
+ 
+		std::cout << "buffer length: " << length << std::endl;
+
+		file.write(reinterpret_cast<char*>(buffer), length);
+		file.close();
+	}
+
+	std::cout << "~~~SAVING~~~" << std::endl;
+	std::cout << "WIDTH: " << expectedWidth << std::endl;
+	std::cout << "HEIGHT: " << height << std::endl;
 }

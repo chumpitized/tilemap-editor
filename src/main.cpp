@@ -22,11 +22,9 @@ int main() {
 		undo();
 		//Draw
 		
-		if (IsKeyPressed(KEY_I)) {
+		if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyPressed(KEY_S)) {
 			save();
 		}
-
-
 
 		//if we want, we can call this only when update...
 		draw_canvas(texture, canvas, entities, tiles, canvasTileWidth, xOffset, yOffset, tileSize);
