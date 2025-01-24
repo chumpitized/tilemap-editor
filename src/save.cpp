@@ -37,10 +37,11 @@ void save() {
 	trimmedCanvas.push_back(0xffff);
 
 	std::fstream file;
-    file.open("save/new_puzzle", std::ios::out | std::ios::binary);
+    file.open("save/new_puzzle", std::ios::app | std::ios::binary);
  
 	//save puzzle to file
 	if (file) {
+		file.seekp(0, file.end);
 		int length = (trimmedCanvas.size() * 2);
 		u8 buffer[length];
 
@@ -91,6 +92,7 @@ void read() {
 			u16 left = buffer[i] << 8;
 			u16 tile = left | buffer[i + 1];
 			puzzle.push_back(tile);
+			if (tile == 0xffff) break;
 		}
 
 		for (int i = 0; i < canvas.size(); ++i) {
@@ -98,8 +100,9 @@ void read() {
 		}
 
 		//ideally we would center the level...
-		u8 width = buffer[length - 4];
-		u8 height = buffer[length - 3];
+		u8 width = puzzle[puzzle.size() - 2] >> 8;
+		u8 height = buffer[puzzle.size() - 2];
+
 
 		for (int i = 0; i < puzzle.size() - 2; ++i) {
 			int row = i / width;
